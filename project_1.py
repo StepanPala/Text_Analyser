@@ -35,7 +35,6 @@ in modern oceans. Other fish such as paddlefish,
 garpike and stingray are also present.'''
 ]
 
-
 # Registered users
 users = {
     "bob": "123",
@@ -46,7 +45,14 @@ users = {
 
 # Login verification
 username = input("Please enter your username: ")
-if users.get(username) == input("Please enter your password: "):
+if users.get(username) != input("Please enter your password: "):
+    
+    # User not recognized
+    print("Unregistered user, terminating program…")
+    exit()
+
+# Login successful
+else:
     print(
         f"{"-" * 42}\n"
         f"Welcome, {username.title()}.\n"
@@ -56,91 +62,74 @@ if users.get(username) == input("Please enter your password: "):
   
     # Text analysis
     allowed_input = input("Please enter 1, 2 or 3 to select a text: ")
-
     print(f"{"-" * 42}")
 
-    # Correct input
-    if allowed_input.isdigit() and int(allowed_input) in (1, 2, 3):
+    # Input check
+    # Not a number
+    if not allowed_input.isdigit():
+        print("The entered value is not a number, terminating program…")
+        exit()
+
+    # Wrong number
+    if allowed_input not in ["1", "2", "3"]:
+         print("You have entered an invalid number, terminating program…")
+         exit()
+
+    else:
+        # Text split
+        index = int(allowed_input) - 1
+        words = texts[index].split()
         
         # Number of words
-        index = int(allowed_input) - 1
-        words_number = len(texts[index].split())
-        print(f"There are {words_number} words in the text.")
-
-        # Titlecase words
-        words_title = 0
-        for titlecase in texts[index].split():
-            if titlecase.istitle():
-                words_title += 1
-        print(f"There are {words_title} titlecase words in the text.")
-
-        # Uppercase words
-        words_upper = 0
-        for uppercase in texts[index].split():
-            if uppercase.isupper() and uppercase.isalpha():
-                words_upper += 1
-        print(f"There are {words_upper} uppercase words in the text.")
-
-        # Lowercase words
-        words_lower = 0
-        for lowercase in texts[index].split():
-            if lowercase.islower():
-                words_lower += 1
-        print(f"There are {words_lower} lowercase words in the text.")
-
-        # Numeric strings
-        num_strings = 0
-        for numeric in texts[index].split():
-            if numeric.isdigit():
-                num_strings += 1
-        print(f"There are {num_strings} numeric strings in the text.")
-
-        # Sum of all numbers
-        numeric_list = []
-        for numeric in texts[index].split():
-            if numeric.isdigit():
-                numeric_list.append(int(numeric))
-        num_sum = sum(numeric_list)        
-        print(f"The sum of all the numbers is {(num_sum)}.")
-
-        # Graphical representation
-        # Words length
-        words_len = {}
-        for words in texts[index].split():
-
-            # Remove unwanted characters
-            words_clean = words.strip(",.?!")
-
-            # Calculate length and number of words
-            length = len(words_clean)
-            if not length in words_len:
-                words_len[length] = 1
-            else:
-                words_len[length] += 1
-
-        # Convert to list and sort the list
-        words_list = list(words_len.items())
-        words_list.sort()
+        words_number = len(words)
         
-        # Print the result
+        # Titlecase words
+        words_title = [titlecase for titlecase in words if titlecase.istitle()]
+        words_title_num = len(words_title)
+        
+        # Uppercase words
+        words_upper = [uppercase for uppercase in words if uppercase.isupper() and uppercase.isalpha()]
+        words_upper_num = len(words_upper)
+        
+        # Lowercase words
+        words_lower = [lowercase for lowercase in words if lowercase.islower()]
+        words_lower_num = len(words_lower)
+        
+        # Numeric strings and their sum
+        numeric_strings = [numeric for numeric in words if numeric.isdigit()]
+        numeric_strings_num = len(numeric_strings)
+        num_sum = sum(int(numeric) for numeric in numeric_strings)
+        
+        # Print the results
+        print(
+            f"There are {words_number} words in the text.\n"
+            f"There are {words_title_num} titlecase words in the text.\n"
+            f"There are {words_upper_num} uppercase words in the text.\n"
+            f"There are {words_lower_num} lowercase words in the text.\n"
+            f"There are {numeric_strings_num} numeric strings in the text.\n"
+            f"The sum of all the numbers is {num_sum}."
+            )
+        
+        # Graphical representation
+        # Words length and number
+        words_len = {}
+        for word in words:
+            word_clean = word.strip(",.?!")
+            if word_clean:
+                length = len(word_clean)
+                if length in words_len:
+                    words_len[length] += 1
+                else:
+                    words_len[length] = 1
+        words_len_sorted = dict(sorted(words_len.items()))
+                
+        # Print the chart
         print(
             f"{"-" * 42}\n"
             f"LEN|{"OCCURENCES":^20}|NR.\n"
             f"{"-" * 42}\n"
         )
-        for idx, occurence in words_list:
+        for idx, occurence in words_len_sorted.items():
             print(
                 f"{idx:>3}|{("*" * int(occurence)):<20}|{occurence:<3}"
             )
-  
-    # Not a digit
-    elif not allowed_input.isdigit():
-        print("The entered value is not a number, terminating program…")
-
-    # Wrong digit
-    else:
-        print("You have entered an invalid number, terminating program…")
-        
-# User not recognized
-else:
-    print("Unregistered user, terminating program…")
