@@ -6,6 +6,8 @@ author: Štěpán Pala
 e-mail: Palast@seznam.cz
 """
 
+import re
+
 # Source texts
 texts = ['''
 Situated about 10 miles west of Kemmerer,
@@ -107,7 +109,6 @@ else:
 
         # Graphical representation
         # Words length and number
-        import re
         words_len = {}
         for word in words:
             # Removes unwanted characters
