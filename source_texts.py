@@ -1,3 +1,7 @@
+"""
+These texts are basis for the analysis.
+"""
+
 # Source texts
 texts = ['''
 Situated about 10 miles west of Kemmerer,

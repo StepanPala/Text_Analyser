@@ -1,3 +1,7 @@
+"""
+This is a database of users' login details.
+"""
+
 # Registered users
 users = {
     "bob": "123",
