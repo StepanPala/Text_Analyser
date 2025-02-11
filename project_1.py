@@ -11,65 +11,75 @@ import re
 from source_texts import texts
 from login_data import users
 
+DASH_SEPARTOR = '-' * 42
+
+def print_separator():
+    """Prints a separator."""
+    print(DASH_SEPARTOR)
+
+def validate_input(input_value, valid_options):
+    """Validates the input value."""
+    if not input_value.isdigit():
+        sys.exit("The entered value is not a number, terminating program…")
+    if input_value not in valid_options:
+        sys.exit("You have entered an invalid number, terminating program…")
+
 # Login verification
 username = input("Please enter your username: ")
-if users.get(username) != input("Please enter your password: "):
+password = input("Please enter your password: ")
+if users.get(username) != password:
 
     # User not recognized
     sys.exit("Unregistered user, terminating program…")
 
 # Login successful
-print(
-    f"{'-' * 42}\n"
-    f"Welcome, {username.title()}.\n"
-    f"There are three texts to be analysed.\n"
-    f"{'-' * 42}"
-    )
+print_separator()
+print(f"Welcome, {username.title()}.")
+print("There are three texts to be analysed.")
+print_separator()
 
 # Text analysis
-allowed_input = input("Please enter 1, 2 or 3 to select a text: ")
-print(f"{'-' * 42}")
+text_choice = input("Please enter 1, 2 or 3 to select a text: ")
+print_separator()
 
 # Input check
-# Not a number
-if not allowed_input.isdigit():
-    sys.exit("The entered value is not a number, terminating program…")
-
-# Wrong number
-if allowed_input not in ["1", "2", "3"]:
-    sys.exit("You have entered an invalid number, terminating program…")
+validate_input(text_choice, ["1", "2", "3"])
 
 # Text split
-index = int(allowed_input) - 1
+index = int(text_choice) - 1
 words = texts[index].split()
 
 # Number of words
 words_number = len(words)
 
 # Titlecase words
-words_title = len([titlecase for titlecase in words if titlecase.istitle()])
+words_title = len([word for word in words if word.istitle()])
 
 # Uppercase words
-words_upper = len(
-     [uppercase for uppercase in words if uppercase.isupper() and uppercase.isalpha()]
-     )
+words_upper = len([word for word in words if word.isupper() and word.isalpha()])
 
 # Lowercase words
-words_lower = len([lowercase for lowercase in words if lowercase.islower()])
+words_lower = len([word for word in words if word.islower()])
 
 # Numeric strings and their sum
-numeric_strings = len([numeric for numeric in words if numeric.isdigit()])
-num_sum = sum(int(numeric) for numeric in words if numeric.isdigit())
+numeric_strings = len([word for word in words if word.isdigit()])
+num_sum = sum(int(word) for word in words if word.isdigit())
 
 # Print the results
-print(
-     f"There are {words_number} words in the text.\n"
-     f"There are {words_title} titlecase words in the text.\n"
-     f"There are {words_upper} uppercase words in the text.\n"
-     f"There are {words_lower} lowercase words in the text.\n"
-     f"There are {numeric_strings} numeric strings in the text.\n"
-     f"The sum of all the numbers is {num_sum}."
-     )
+results = {
+    "words in the text": words_number,
+    "titlecase words in the text": words_title,
+    "uppercase words in the text": words_upper,
+    "lowercase words in the text": words_lower,
+    "numeric strings in the text": numeric_strings,
+    "sum of all the numbers": num_sum,
+}
+
+for description, value in results.items():
+    if "sum" in description:
+        print(f"The {description} is {value}.")
+    else:
+        print(f"There are {value} {description}.")
 
 # Graphical representation
 # Words length and number
@@ -83,13 +93,13 @@ for word in words:
     words_len_sorted = dict(sorted(words_len.items()))
 
 # Print the chart
-print(
-    f"{'-' * 42}\n"
-    f"LEN|{'OCCURENCES':^20}|NR.\n"
-    f"{'-' * 42}\n"
-    )
+print_separator()
+print(f"LEN|{'OCCURENCES':^20}|NR.")
+print_separator()
+
+max_occurence = max(words_len_sorted.values())
+scale_factor = 20 / max_occurence if max_occurence > 0 else 1
 
 for idx, occurence in words_len_sorted.items():
-    print(
-        f"{idx:>3}|{('*' * int(occurence)):<20}|{occurence:<3}"
-        )
+    scaled_occurence = int(occurence * scale_factor)
+    print(f"{idx:>3}|{('*' * scaled_occurence):<20}|{occurence:<3}")
