@@ -49,7 +49,9 @@ def analyse_text(input_text: str) -> dict[str, int]:
     input_words = input_text.split()
     words_number = len(input_words)
     words_title = sum(1 for word in input_words if word.istitle())
-    words_upper = sum(1 for word in input_words if word.isupper() and word.isalpha())
+    words_upper = sum(
+        1 for word in input_words if word.isupper() and word.isalpha()
+    )
     words_lower = sum(1 for word in input_words if word.islower())
     numeric_strings = [int(word) for word in input_words if word.isdigit()]
     num_sum = sum(numeric_strings)
