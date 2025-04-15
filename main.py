@@ -13,9 +13,11 @@ from login_data import users
 
 DASH_SEPARTOR = '-' * 42
 
+
 def print_separator():
     """Prints a separator."""
     print(DASH_SEPARTOR)
+
 
 def validate_input(input_value: str, valid_options: list) -> bool:
     """
@@ -35,6 +37,7 @@ def validate_input(input_value: str, valid_options: list) -> bool:
         print("You have entered an invalid number, terminating program…")
         return False
     return True
+
 
 def analyse_text(input_text: str) -> dict[str, int]:
     """
@@ -64,6 +67,7 @@ def analyse_text(input_text: str) -> dict[str, int]:
         "sum of all the numbers": num_sum,
     }
 
+
 def generate_and_print_chart(word_list: list[str]):
     """
     Generates and prints a chart with word lengths.
@@ -91,43 +95,49 @@ def generate_and_print_chart(word_list: list[str]):
         scaled_occurence = int(occurence * scale_factor)
         print(f"{idx:>3}|{('*' * scaled_occurence):<20}|{occurence:<3}")
 
-# Login verification
-username = input("Please enter your username: ")
-password = input("Please enter your password: ")
 
-if users.get(username) != password:
-    # User not recognized
-    sys.exit("Unregistered user, terminating program…")
+def main():
+    """Main function to run the program."""
+    # Login verification
+    username = input("Please enter your username: ")
+    password = input("Please enter your password: ")
 
-# Login successful
-print_separator()
-print(f"Welcome, {username.title()}.")
-print("There are three texts to be analysed.")
-print_separator()
+    if users.get(username) != password:
+        # User not recognized
+        sys.exit("Unregistered user, terminating program…")
 
-# Input check
-while True:
-    text_choice = input("Please enter 1, 2 or 3 to select a text: ")
+    # Login successful
     print_separator()
-    if validate_input(text_choice, ["1", "2", "3"]):
-        break # Exit the loop if the input is valid
+    print(f"Welcome, {username.title()}.")
+    print("There are three texts to be analysed.")
     print_separator()
-    sys.exit()
 
-# Text split
-index = int(text_choice) - 1
-text = texts[index]
+    # Input check
+    while True:
+        text_choice = input("Please enter 1, 2 or 3 to select a text: ")
+        print_separator()
+        if validate_input(text_choice, ["1", "2", "3"]):
+            break # Exit the loop if the input is valid
+        print_separator()
+        sys.exit()
 
-# Analyse text
-results = analyse_text(text)
+    # Text split
+    index = int(text_choice) - 1
+    text = texts[index]
 
-# Print the results
-for description, value in results.items():
-    if "sum" in description:
-        print(f"The {description} is {value}.")
-    else:
-        print(f"There are {value} {description}.")
+    # Analyse text
+    results = analyse_text(text)
 
-if __name__ == "__main__":
+    # Print the results
+    for description, value in results.items():
+        if "sum" in description:
+            print(f"The {description} is {value}.")
+        else:
+            print(f"There are {value} {description}.")
+
+    # Generate and print the chart
     words = text.split()
     generate_and_print_chart(words)
+
+if __name__ == "__main__":
+    main() # Call the main function to start the program
